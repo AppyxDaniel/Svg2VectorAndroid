@@ -59,6 +59,8 @@ public class SvgFilesProcessor {
                             return FileVisitResult.SKIP_SUBTREE;
                         }
 
+                        System.out.println("Visiting directory: " + dir.toAbsolutePath());
+
                         CopyOption[] opt = new CopyOption[]{COPY_ATTRIBUTES, REPLACE_EXISTING};
                         Path newDirectory = destinationVectorPath.resolve(sourceSvgPath.relativize(dir));
                         try {
@@ -74,7 +76,11 @@ public class SvgFilesProcessor {
 
                     public FileVisitResult visitFile(Path file,
                                                      BasicFileAttributes attrs) throws IOException {
-                        convertToVector(file, destinationVectorPath.resolve(sourceSvgPath.relativize(file)));
+                        try {
+                            convertToVector(file, destinationVectorPath.resolve(sourceSvgPath.relativize(file)));
+                        } catch(Exception exc) {
+                            System.out.println("Exception on convertToVector " + exc.toString());
+                        }
                         return CONTINUE;
                     }
 
